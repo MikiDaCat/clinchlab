@@ -1,15 +1,17 @@
 import { ImageResponse } from "next/og"
+import { readFileSync } from "fs"
+import { join } from "path"
 
-export const size        = { width: 32, height: 32 }
+export const size        = { width: 512, height: 512 }
 export const contentType = "image/png"
 
-/* Favicon 32×32 — ClinchLab */
-export default function Icon() {
+/* Favicon 512×512 — dragon vs tigre sur fond siam */
+export default async function Icon() {
+  const buf     = readFileSync(join(process.cwd(), "public", "logo.png"))
+  const logoSrc = `data:image/png;base64,${buf.toString("base64")}`
   return new ImageResponse(
-    <div style={{ background: "#0A0A0A", width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "22%" }}>
-      <div style={{ background: "#DC2626", width: "80%", height: "80%", borderRadius: "16%", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontSize: 11, fontWeight: 900, fontFamily: "sans-serif", letterSpacing: -1 }}>
-        CL
-      </div>
+    <div style={{ width: "100%", height: "100%", background: "#DC2626", display: "flex", alignItems: "center", justifyContent: "center", padding: "12%" }}>
+      <img src={logoSrc} alt="ClinchLab" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
     </div>,
     { ...size }
   )
