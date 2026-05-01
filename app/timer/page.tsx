@@ -4,7 +4,8 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react"
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
 import Link from "next/link"
 import Nav from "@/components/Nav"
-import RingTimer, { type TimerState } from "@/components/RingTimer"
+import { type TimerState } from "@/components/RingTimer"
+import GiantTimer from "@/components/run/GiantTimer"
 import CountdownOverlay from "@/components/run/CountdownOverlay"
 import type { CountdownValue } from "@/components/run/CountdownOverlay"
 import { useTimerSound } from "@/hooks/useTimerSound"
@@ -419,10 +420,10 @@ export default function TimerPage() {
                 </AnimatePresence>
               </div>
 
-              {/* Ring preview + START */}
+              {/* Timer preview + START */}
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "8px 20px 0", gap: 16 }}>
-                <div style={{ pointerEvents: "none" }}>
-                  <RingTimer duration={ringDuration} remaining={ringDuration} state="pause" size="md" />
+                <div style={{ pointerEvents: "none", width: "100%" }}>
+                  <GiantTimer remaining={ringDuration} state="pause" />
                 </div>
                 <div className="tmt-above-nav" style={{ width: "100%" }}>
                   <motion.button
@@ -455,14 +456,9 @@ export default function TimerPage() {
                   style={{ position: "absolute", inset: 0, cursor: "pointer", zIndex: 1, touchAction: "manipulation" }}
                 />
               )}
-              <motion.div
-                style={{ position: "relative", zIndex: 2, pointerEvents: "none" }}
-                initial={reduced ? false : { scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ type: "spring", stiffness: 200, damping: 24 }}
-              >
-                <RingTimer duration={ringDuration} remaining={ringRemaining} state={timerState} size="lg" />
-              </motion.div>
+              <div style={{ position: "relative", zIndex: 2, pointerEvents: "none", width: "100%" }}>
+                <GiantTimer remaining={ringRemaining} state={timerState} />
+              </div>
               <AnimatePresence>
                 {phase === "done" && (
                   <motion.p
