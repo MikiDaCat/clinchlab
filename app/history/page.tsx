@@ -509,7 +509,7 @@ export default function HistoryPage() {
         <div style={{ fontFamily: FN, fontSize: 10, fontWeight: 700, letterSpacing: "0.22em", color: "var(--siam)", textTransform: "uppercase", marginBottom: 2 }}>
           HALL OF FAME
         </div>
-        <h1 style={{ fontFamily: FD, fontSize: "clamp(40px, 11vw, 56px)", lineHeight: 0.9, letterSpacing: "-0.02em", color: "var(--ink)", margin: "0 0 6px" }}>
+        <h1 style={{ fontFamily: FD, fontSize: "clamp(32px, 8vw, 44px)", lineHeight: 0.9, letterSpacing: "-0.02em", color: "var(--ink)", margin: "0 0 6px" }}>
           MES COMBATS
         </h1>
         <div style={{ fontFamily: FU, fontSize: 12, fontWeight: 500, color: "var(--ink-4)", marginBottom: 16 }}>

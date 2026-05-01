@@ -19,7 +19,7 @@ const COLORS: Record<TimerState, string> = {
   active:  "var(--siam)",
   rest:    "var(--frost)",
   warning: "var(--champion)",
-  pause:   "var(--ink-3)",
+  pause:   "var(--ink-2)",
   done:    "var(--jade-pro)",
 }
 
