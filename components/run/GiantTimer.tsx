@@ -8,7 +8,13 @@ interface GiantTimerProps {
   remaining: number
   state:     TimerState
   label?:    string
+  size?:     "default" | "compact"
 }
+
+const FONT_SIZE = {
+  default: "clamp(130px, 38vw, 250px)",
+  compact: "clamp(80px, 24vw, 140px)",
+} as const
 
 function fmt(sec: number): string {
   const s = Math.max(0, Math.floor(sec))
@@ -31,7 +37,7 @@ const GLOWS: Record<TimerState, string> = {
   done:    "0 0 60px rgba(16,185,129,0.40)",
 }
 
-export default function GiantTimer({ remaining, state, label }: GiantTimerProps) {
+export default function GiantTimer({ remaining, state, label, size = "default" }: GiantTimerProps) {
   const reduced      = useReducedMotion()
   const color        = COLORS[state]
   const glow         = reduced ? "none" : GLOWS[state]
@@ -95,7 +101,7 @@ export default function GiantTimer({ remaining, state, label }: GiantTimerProps)
         style={{
           display:            "block",
           fontFamily:         "var(--font-display)",
-          fontSize:           "clamp(130px, 38vw, 250px)",
+          fontSize:           FONT_SIZE[size],
           fontWeight:         400,
           letterSpacing:      "-0.03em",
           lineHeight:         0.88,

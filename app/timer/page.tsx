@@ -425,14 +425,14 @@ export default function TimerPage() {
                 display:       "flex",
                 flexDirection: "column",
                 alignItems:    "center",
-                paddingTop:    8,
+                paddingTop:    4,
                 paddingLeft:   20,
                 paddingRight:  20,
                 paddingBottom: "max(20px, calc(env(safe-area-inset-bottom, 0px) + 16px))",
-                gap:           16,
+                gap:           12,
               }}>
                 <div style={{ pointerEvents: "none", width: "100%" }}>
-                  <GiantTimer remaining={ringDuration} state="pause" />
+                  <GiantTimer remaining={ringDuration} state="pause" size="compact" />
                 </div>
                 <div style={{ width: "100%" }}>
                   <motion.button
