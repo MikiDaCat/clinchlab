@@ -1,0 +1,659 @@
+/* ═══════════════════════════════════════════════════════════════
+   DT MUAY SIAM · Coach Edition
+   Design System V2 — Combat Heritage
+   Direction : ONE FC × UFC × Broadcast TV × Héritage Thaï
+   Dark-first · Mobile-first · 375-430px cœur
+═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ─── SURFACES (noir combat) ──────────────────────────── */
+  --paper:   #0A0A0A;   /* fond principal — noir profond     */
+  --paper-2: #141414;   /* sections secondaires              */
+  --paper-3: #1A1A1A;   /* cards, drawers                    */
+  --paper-4: #242424;   /* hover, sélection                  */
+
+  /* Aliases V1 → V2 (backward compat) */
+  --card:    #1A1A1A;
+  --card-2:  #242424;
+  --card-3:  #2E2E2E;
+
+  /* ─── BORDERS ─────────────────────────────────────────── */
+  --rule:      rgba(250, 250, 250, 0.08);
+  --rule-2:    rgba(250, 250, 250, 0.12);
+  --rule-3:    rgba(250, 250, 250, 0.22);
+  --rule-siam: rgba(220, 38, 38, 0.30);
+
+  /* ─── TYPOGRAPHIE ──────────────────────────────────────── */
+  --ink:   #FAFAFA;   /* blanc tigre — texte primaire         */
+  --ink-2: #D4D4D8;   /* texte secondaire                     */
+  --ink-3: #A1A1AA;   /* labels, muted                        */
+  --ink-4: #71717A;   /* très discret, placeholders           */
+
+  /* ─── MUAY SIAM ROUGE — couleur identité principale ───── */
+  --siam:        #DC2626;
+  --siam-hot:    #EF4444;
+  --siam-deep:   #991B1B;
+  --siam-soft:   rgba(220, 38, 38, 0.12);
+  --siam-line:   rgba(220, 38, 38, 0.30);
+
+  /* Aliases V1 → siam (backward compat — tout le code existant fonctionne) */
+  --flame:        #DC2626;
+  --flame-soft:   rgba(220, 38, 38, 0.12);
+  --flame-line:   rgba(220, 38, 38, 0.30);
+  --flame-glow:   rgba(220, 38, 38, 0.25);
+
+  /* ─── SECONDAIRES ──────────────────────────────────────── */
+  --champion:  #FBBF24;   /* or champion, achievements        */
+  --jade-pro:  #10B981;   /* validation, succès               */
+  --siam-blue: #1E3A8A;   /* bleu drapeau thaï (subtil)       */
+
+  /* ─── ÉTATS TIMER (inchangés — cohérence sémantique) ───── */
+  --frost:      oklch(0.65 0.18 225);
+  --frost-soft: oklch(0.65 0.18 225 / 0.12);
+  --frost-line: oklch(0.65 0.18 225 / 0.35);
+  --frost-glow: oklch(0.65 0.18 225 / 0.18);
+
+  --amber:      oklch(0.88 0.22 95);
+  --amber-soft: oklch(0.88 0.22 95 / 0.10);
+  --amber-line: oklch(0.88 0.22 95 / 0.35);
+  --amber-glow: oklch(0.88 0.22 95 / 0.20);
+
+  --jade:       oklch(0.62 0.16 165);
+  --jade-soft:  oklch(0.62 0.16 165 / 0.12);
+  --jade-line:  oklch(0.62 0.16 165 / 0.30);
+
+  /* ─── ÉTATS SÉMANTIQUES COMBAT ─────────────────────────── */
+  --state-active:        var(--siam);
+  --state-active-soft:   var(--siam-soft);
+  --state-active-line:   var(--siam-line);
+  --state-rest:          var(--frost);
+  --state-rest-soft:     var(--frost-soft);
+  --state-rest-line:     var(--frost-line);
+  --state-warning:       var(--amber);
+  --state-warning-soft:  var(--amber-soft);
+  --state-warning-line:  var(--amber-line);
+  --state-pause:         oklch(0.50 0.01 260);
+  --state-pause-soft:    oklch(0.50 0.01 260 / 0.10);
+  --state-done:          var(--jade);
+  --state-done-soft:     var(--jade-soft);
+
+  /* ─── NIVEAUX (chips N1→N6) ─────────────────────────────── */
+  --lvl-1: oklch(0.80 0.12 90);
+  --lvl-2: oklch(0.72 0.16 65);
+  --lvl-3: oklch(0.65 0.18 45);
+  --lvl-4: oklch(0.58 0.22 25);
+  --lvl-5: #DC2626;
+  --lvl-6: #7C3AED;
+
+  /* ─── TYPOGRAPHIE ───────────────────────────────────────── */
+  /* next/font injecte --font-anton / --font-manrope / --font-barlow
+     via les classes HTML. On les réassigne ici sous les noms sémantiques. */
+  --font-display: var(--font-anton, 'Anton', sans-serif);
+  --font-ui:      var(--font-manrope, 'Manrope', system-ui, sans-serif);
+  --font-num:     var(--font-barlow, 'Barlow Condensed', 'Arial Narrow', Arial, sans-serif);
+
+  /* Backward compat — tout le code existant continue de fonctionner */
+  --font-body:  var(--font-ui);
+  --font-mono:  ui-monospace, 'SF Mono', Consolas, monospace;
+  --font-timer: var(--font-num);
+
+  /* ─── TAILLES TIMER ─────────────────────────────────────── */
+  --timer-xs:  56px;
+  --timer-sm:  80px;
+  --timer-md: 120px;
+  --timer-lg: 160px;
+  --timer-xl: 220px;
+
+  /* ─── TOUCH TARGETS ─────────────────────────────────────── */
+  --hit-sm:  44px;
+  --hit-md:  52px;
+  --hit-lg:  60px;
+  --hit-xl:  72px;
+
+  /* ─── RAYONS ────────────────────────────────────────────── */
+  --r-1:  4px;
+  --r-2:  8px;
+  --r-3: 14px;
+  --r-4: 20px;
+
+  /* ─── OMBRES ────────────────────────────────────────────── */
+  --shadow-xs:  0 1px 3px rgba(0,0,0,0.60);
+  --shadow-sm:  0 2px 12px rgba(0,0,0,0.70), 0 1px 3px rgba(0,0,0,0.50);
+  --shadow-md:  0 4px 24px rgba(0,0,0,0.80), 0 2px 8px rgba(0,0,0,0.50);
+  --shadow-lg:  0 8px 48px rgba(0,0,0,0.90), 0 4px 12px rgba(0,0,0,0.60);
+  --shadow-nav: 0 -1px 0 rgba(255,255,255,0.04), 0 -12px 48px rgba(0,0,0,0.80);
+
+  /* ─── GLOWS ─────────────────────────────────────────────── */
+  --glow-siam:    0 0 40px rgba(220, 38, 38, 0.55), 0 0 80px rgba(220, 38, 38, 0.22);
+  --glow-siam-sm: 0 0 20px rgba(220, 38, 38, 0.60);
+  --glow-siam-xl: 0 0 80px rgba(220, 38, 38, 0.70), 0 0 160px rgba(220, 38, 38, 0.30);
+
+  /* Aliases */
+  --glow-flame:    var(--glow-siam);
+  --glow-flame-sm: var(--glow-siam-sm);
+  --glow-frost:    0 0 30px oklch(0.65 0.18 225 / 0.45);
+  --glow-frost-sm: 0 0 16px oklch(0.65 0.18 225 / 0.50);
+  --glow-amber:    0 0 30px oklch(0.88 0.22 95 / 0.55);
+  --glow-amber-sm: 0 0 16px oklch(0.88 0.22 95 / 0.60);
+
+  /* ─── TIMING ──────────────────────────────────────────── */
+  --t-fast:   120ms;
+  --t-base:   220ms;
+  --t-slow:   380ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in:  cubic-bezier(0.64, 0, 0.78, 0);
+  --ease-io:  cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+
+/* ════════════════════════════════════════
+   RESET
+════════════════════════════════════════ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+html, body { height: 100%; }
+body {
+  font-family: var(--font-ui);
+  font-size: 15px;
+  line-height: 1.5;
+  background: var(--paper);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overscroll-behavior: none;
+}
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  transition:
+    opacity    var(--t-fast) var(--ease-out),
+    transform  var(--t-fast) var(--ease-out),
+    background var(--t-base) var(--ease-out),
+    box-shadow var(--t-base) var(--ease-out),
+    color      var(--t-fast) var(--ease-out);
+}
+a { text-decoration: none; color: inherit; }
+:focus-visible {
+  outline: 2px solid var(--siam);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ════════════════════════════════════════
+   APP SHELL
+════════════════════════════════════════ */
+.app-shell {
+  display: flex;
+  justify-content: center;
+  min-height: 100dvh;
+  background: var(--paper-2);
+}
+.tmt-screen {
+  position: relative;
+  width: 100%;
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.tmt-above-nav {
+  padding-bottom: max(24px, calc(88px + env(safe-area-inset-bottom, 0px)));
+}
+.tmt-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.tmt-scroll::-webkit-scrollbar { display: none; }
+
+/* ════════════════════════════════════════
+   TYPOGRAPHIE
+════════════════════════════════════════ */
+.tmt-clock {
+  font-family: var(--font-num);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+/* Horloge Anton — timer géant V2 */
+.tmt-clock-anton {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  line-height: 0.9;
+}
+.tmt-section-lbl {
+  font-size: 10px;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+  font-family: var(--font-num);
+}
+/* Titre broadcast Anton */
+.tmt-broadcast-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  line-height: 0.95;
+}
+
+/* ════════════════════════════════════════
+   CARD
+════════════════════════════════════════ */
+.tmt-card {
+  background: var(--card);
+  border-radius: var(--r-3);
+  border: 1px solid var(--rule);
+  padding: 18px;
+  transition:
+    box-shadow    var(--t-base) var(--ease-out),
+    border-color  var(--t-base) var(--ease-out);
+}
+.tmt-card-ttl {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 700;
+  font-family: var(--font-num);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tmt-card-ttl::before {
+  content: '';
+  width: 4px;
+  height: 14px;
+  background: var(--siam);
+  flex-shrink: 0;
+}
+
+/* Card avec accent siam */
+.tmt-card-siam {
+  border-color: var(--rule-siam);
+  background: linear-gradient(
+    135deg,
+    rgba(220, 38, 38, 0.06) 0%,
+    var(--card) 40%
+  );
+}
+
+/* ════════════════════════════════════════
+   BOUTONS
+════════════════════════════════════════ */
+.tmt-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 0 24px;
+  height: var(--hit-md);
+  border-radius: var(--r-2);
+  font-size: 15px;
+  font-weight: 700;
+  font-family: var(--font-ui);
+  cursor: pointer;
+  border: none;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform   var(--t-fast) var(--ease-out),
+    box-shadow  var(--t-base) var(--ease-out),
+    opacity     var(--t-fast) var(--ease-out);
+}
+.tmt-btn.flame,
+.tmt-btn.siam {
+  background: var(--siam);
+  color: white;
+  box-shadow: var(--glow-siam-sm);
+}
+.tmt-btn.flame:hover,
+.tmt-btn.siam:hover { box-shadow: var(--glow-siam); }
+.tmt-btn.ghost {
+  background: transparent;
+  color: var(--ink-2);
+  border: 1px solid var(--rule-2);
+  text-transform: none;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.tmt-btn.ghost:hover { background: var(--card); border-color: var(--rule-3); }
+.tmt-btn.paper { background: var(--card-2); color: var(--ink); }
+.tmt-btn.paper:hover { background: var(--card-3); }
+.tmt-btn.lg {
+  height: var(--hit-lg);
+  font-size: 16px;
+  border-radius: var(--r-3);
+  letter-spacing: 0.04em;
+}
+.tmt-btn.xl {
+  height: var(--hit-xl);
+  font-size: 18px;
+  border-radius: var(--r-3);
+  letter-spacing: 0.06em;
+}
+
+/* ════════════════════════════════════════
+   ICON BUTTON
+════════════════════════════════════════ */
+.tmt-iconbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width:  var(--hit-md);
+  min-height: var(--hit-md);
+  border-radius: var(--r-2);
+  background: var(--card);
+  border: 1px solid var(--rule);
+  color: var(--ink);
+  flex-shrink: 0;
+  cursor: pointer;
+  transition:
+    background    var(--t-fast) var(--ease-out),
+    border-color  var(--t-fast) var(--ease-out),
+    transform     var(--t-fast) var(--ease-out),
+    box-shadow    var(--t-fast) var(--ease-out);
+}
+.tmt-iconbtn:hover  { background: var(--card-2); border-color: var(--rule-2); }
+.tmt-iconbtn:active { transform: scale(0.92); }
+.tmt-iconbtn.lg {
+  min-width:  var(--hit-lg);
+  min-height: var(--hit-lg);
+  border-radius: var(--r-3);
+  border-color: var(--rule-2);
+}
+
+/* ════════════════════════════════════════
+   PILL BADGE
+════════════════════════════════════════ */
+.tmt-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  font-family: var(--font-num);
+  text-transform: uppercase;
+  background: var(--card-2);
+  color: var(--ink-2);
+  border: 1px solid var(--rule);
+}
+.tmt-pill.siam  { background: var(--siam-soft); color: var(--siam-hot); border-color: var(--siam-line); }
+.tmt-pill.flame { background: var(--siam-soft); color: var(--siam-hot); border-color: var(--siam-line); }
+.tmt-pill.frost { background: var(--frost-soft); color: var(--frost); border-color: var(--frost-line); }
+.tmt-pill.amber { background: var(--amber-soft); color: var(--amber); border-color: var(--amber-line); }
+.tmt-pill.jade  { background: var(--jade-soft);  color: var(--jade);  border-color: var(--jade-line); }
+
+/* ════════════════════════════════════════
+   SEGMENT TABS
+════════════════════════════════════════ */
+.tmt-tabs {
+  display: flex;
+  gap: 2px;
+  background: var(--paper-2);
+  padding: 3px;
+  border-radius: var(--r-2);
+  border: 1px solid var(--rule);
+}
+.tmt-tab {
+  flex: 1;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: var(--font-num);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  min-height: 44px;
+  transition:
+    background  var(--t-base) var(--ease-out),
+    color       var(--t-base) var(--ease-out),
+    box-shadow  var(--t-base) var(--ease-out);
+}
+.tmt-tab.on { background: var(--card-2); color: var(--ink); box-shadow: var(--shadow-xs); }
+.tmt-tab:not(.on):hover { color: var(--ink-2); }
+
+/* ════════════════════════════════════════
+   SCREEN HEADER
+════════════════════════════════════════ */
+.tmt-hdr {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 20px 14px;
+  flex-shrink: 0;
+}
+.tmt-hdr h1 {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  flex: 1;
+  line-height: 1;
+}
+
+/* ════════════════════════════════════════
+   ROW LAYOUT
+════════════════════════════════════════ */
+.tmt-row      { display: flex; align-items: center; gap: 12px; }
+.tmt-row-main { flex: 1; min-width: 0; }
+.tmt-row-ttl  { font-size: 14px; font-weight: 600; }
+.tmt-row-sub  { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
+
+/* ════════════════════════════════════════
+   STEPPER CONTROL
+════════════════════════════════════════ */
+.tmt-stp {
+  display: inline-flex;
+  align-items: center;
+  background: var(--paper-2);
+  border-radius: var(--r-2);
+  border: 1px solid var(--rule);
+  padding: 3px;
+  gap: 2px;
+}
+.tmt-stp button {
+  min-width: 36px; min-height: 36px;
+  border-radius: 6px;
+  background: var(--card);
+  font-size: 18px;
+  color: var(--ink);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--rule);
+  transition: background var(--t-fast) var(--ease-out);
+}
+.tmt-stp button:hover { background: var(--card-2); }
+.tmt-stp span {
+  font-family: var(--font-num);
+  font-size: 16px;
+  font-weight: 700;
+  min-width: 52px;
+  text-align: center;
+  letter-spacing: -0.01em;
+}
+
+/* ════════════════════════════════════════
+   GLASS NAV
+════════════════════════════════════════ */
+.tmt-glass {
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  backdrop-filter: blur(24px) saturate(1.6);
+  -webkit-backdrop-filter: blur(24px) saturate(1.6);
+}
+
+/* ════════════════════════════════════════
+   SKELETON
+════════════════════════════════════════ */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.tmt-skeleton {
+  background: linear-gradient(90deg, var(--paper-2) 25%, var(--paper-3) 50%, var(--paper-2) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+  border-radius: var(--r-1);
+}
+
+/* ════════════════════════════════════════
+   ANIMATIONS COMBAT V2
+════════════════════════════════════════ */
+
+/* Ring glow — siam rouge intense */
+@keyframes ring-glow-active {
+  0%,100% { filter: drop-shadow(0 0  8px rgba(220, 38, 38, 0.65)); }
+  50%      { filter: drop-shadow(0 0 28px rgba(220, 38, 38, 0.98)); }
+}
+@keyframes ring-glow-rest {
+  0%,100% { filter: drop-shadow(0 0  8px oklch(0.65 0.18 225 / 0.50)); }
+  50%      { filter: drop-shadow(0 0 22px oklch(0.65 0.18 225 / 0.82)); }
+}
+@keyframes ring-glow-warning {
+  0%,100% { filter: drop-shadow(0 0  8px oklch(0.88 0.22 95 / 0.65)); }
+  50%      { filter: drop-shadow(0 0 24px oklch(0.88 0.22 95 / 1.00)); }
+}
+
+/* Timer géant pulse */
+@keyframes timer-pulse-siam {
+  0%,100% { text-shadow: 0 0 20px rgba(220, 38, 38, 0.40); }
+  50%      { text-shadow: 0 0 60px rgba(220, 38, 38, 0.80), 0 0 120px rgba(220, 38, 38, 0.30); }
+}
+
+/* Flash de transition */
+@keyframes flash-siam {
+  0%   { opacity: 0; }
+  15%  { opacity: 0.18; }
+  100% { opacity: 0; }
+}
+
+/* Pulse nav background */
+@keyframes pulse-active  { 0%,100% { opacity:1; } 50% { opacity:.55; } }
+@keyframes pulse-warning { 0%,100% { opacity:1; } 50% { opacity:.28; } }
+
+/* Diagonal scan line (subtil) */
+@keyframes scan-line {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(200%); }
+}
+
+/* ════════════════════════════════════════
+   FORM INPUTS
+════════════════════════════════════════ */
+.tmt-input,
+.tmt-textarea,
+.tmt-select {
+  width: 100%;
+  background:  var(--paper-3);
+  border:      1px solid var(--rule-2);
+  border-radius: var(--r-2);
+  color:       var(--ink);
+  font-family: var(--font-ui);
+  font-size:   15px;
+  line-height: 1.5;
+  padding:     13px 16px;
+  transition:
+    border-color  var(--t-fast) var(--ease-out),
+    box-shadow    var(--t-fast) var(--ease-out);
+  outline:     none;
+  appearance:  none;
+  -webkit-appearance: none;
+}
+.tmt-input::placeholder, .tmt-textarea::placeholder { color: var(--ink-4); }
+.tmt-input:focus, .tmt-textarea:focus, .tmt-select:focus {
+  border-color: var(--siam);
+  box-shadow:   0 0 0 3px var(--siam-soft);
+}
+.tmt-input[type="date"], .tmt-input[type="number"] { color-scheme: dark; }
+.tmt-input[type="number"]::-webkit-inner-spin-button,
+.tmt-input[type="number"]::-webkit-outer-spin-button { display: none; }
+.tmt-textarea {
+  resize: vertical;
+  min-height: 88px;
+}
+.tmt-input.error, .tmt-textarea.error {
+  border-color: var(--siam);
+  box-shadow:   0 0 0 3px var(--siam-soft);
+}
+.tmt-input.ok, .tmt-textarea.ok {
+  border-color: var(--jade);
+  box-shadow:   0 0 0 3px var(--jade-soft);
+}
+
+/* Toggle switch */
+.tmt-toggle-track {
+  position:      relative;
+  width:         44px;
+  height:        26px;
+  border-radius: 13px;
+  background:    var(--card-3);
+  border:        1px solid var(--rule-2);
+  flex-shrink:   0;
+  cursor:        pointer;
+  transition:    background var(--t-base) var(--ease-out), border-color var(--t-base) var(--ease-out);
+}
+.tmt-toggle-track.on { background: var(--siam); border-color: var(--siam-line); }
+.tmt-toggle-thumb {
+  position:      absolute;
+  top:           3px;
+  left:          3px;
+  width:         18px;
+  height:        18px;
+  border-radius: 50%;
+  background:    var(--ink-3);
+  transition:    transform var(--t-base) var(--ease-out), background var(--t-base) var(--ease-out);
+  box-shadow:    var(--shadow-xs);
+}
+.tmt-toggle-track.on .tmt-toggle-thumb {
+  transform:  translateX(18px);
+  background: white;
+}
+
+/* ════════════════════════════════════════
+   PERFORMANCE HINTS
+════════════════════════════════════════ */
+.tmt-ring-arc       { will-change: stroke-dashoffset, filter; }
+.tmt-countdown-digit { will-change: opacity, transform, filter; }
+.tmt-nav-pill       { will-change: transform; }
+.tmt-page-enter     { will-change: opacity; }
+
+/* ════════════════════════════════════════
+   REDUCED MOTION
+════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration:        0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration:       0.01ms !important;
+  }
+  .tmt-skeleton { animation: none; background: var(--paper-2); }
+}
