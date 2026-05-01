@@ -65,7 +65,7 @@ export default function Home() {
             transition={{ duration: 0.65, ease: EASE }}
             style={{ width: 180, height: 180, marginBottom: 18, flexShrink: 0 }}
           >
-            <img src="/logo.webp" alt="DT Muay Siam" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+            <img src="/logo.svg" alt="ClinchLab" style={{ width: "100%", height: "100%", objectFit: "contain", filter: "drop-shadow(0 0 24px rgba(220, 38, 38, 0.30))" }} />
           </motion.div>
 
           {/* "DT MUAY SIAM" — chaque mot ne se coupe jamais */}

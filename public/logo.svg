@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="115" fill="#0A0A0A"/>
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- C massif rouge siam — arc 260° ouverture droite ±50° -->
   <path
     d="M 380 145 A 140 140 0 1 0 380 367"
     fill="none"
@@ -7,6 +7,7 @@
     stroke-width="90"
     stroke-linecap="butt"
   />
+  <!-- Accent or champion — trait fin centré sous le C -->
   <line
     x1="180" y1="438"
     x2="332" y2="438"
