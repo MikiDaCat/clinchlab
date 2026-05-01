@@ -175,7 +175,7 @@ function KpiScoreboard({ sessions }: { sessions: Session[] }) {
     : 0
 
   const kpis = [
-    { label: "COMBATS",     value: totalSessions, suffix: "",  sub: "total"          },
+    { label: "SÉANCES",     value: totalSessions, suffix: "",  sub: "total"          },
     { label: "HEURES",      value: totalHours,    suffix: "h", sub: "d'entraînement" },
     { label: "CE MOIS",     value: monthSessions, suffix: "",  sub: "séances"        },
     { label: "NIVEAU MOY.", value: avgLevel,      suffix: "",  sub: "sur 6"          },
@@ -227,7 +227,7 @@ function SessionCard({
       onClick={onTap}
       role="button"
       tabIndex={0}
-      aria-label={`Voir le combat du ${session.date}`}
+      aria-label={`Voir la séance du ${session.date}`}
       onKeyDown={e => (e.key === "Enter" || e.key === " ") && onTap()}
       style={{
         background:   "var(--paper-3)",
@@ -256,7 +256,7 @@ function SessionCard({
       {/* Content */}
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontFamily: FN, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", color: "var(--ink-4)", textTransform: "uppercase", marginBottom: 3 }}>
-          COMBAT #{combatN} · N{session.lvl} · {session.dur}
+          SÉANCE #{combatN} · N{session.lvl} · {session.dur}
         </div>
         <p style={{
           fontFamily:      FU,
@@ -309,7 +309,7 @@ function SessionDetail({
         key="panel"
         role="dialog"
         aria-modal="true"
-        aria-label={`Combat #${combatN}`}
+        aria-label={`Séance #${combatN}`}
         drag="y"
         dragControls={dragControls}
         dragListener={false}
@@ -342,7 +342,7 @@ function SessionDetail({
           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 20 }}>
             <div>
               <div style={{ fontFamily: FN, fontSize: 10, fontWeight: 700, letterSpacing: "0.20em", color: "var(--siam)", textTransform: "uppercase", marginBottom: 4 }}>
-                COMBAT #{combatN}
+                SÉANCE #{combatN}
               </div>
               <div style={{ fontFamily: FD, fontSize: "clamp(32px, 9vw, 44px)", lineHeight: 0.9, letterSpacing: "-0.03em", color: "var(--ink)" }}>
                 {session.date}
@@ -445,7 +445,7 @@ function SessionDetail({
               boxShadow:      "0 0 24px oklch(0.58 0.26 15 / 0.28)",
             }}
           >
-            <IcoPlay /> Refaire ce combat
+            <IcoPlay /> Refaire cette séance
           </motion.button>
         </div>
       </motion.div>
@@ -510,7 +510,7 @@ export default function HistoryPage() {
           HALL OF FAME
         </div>
         <h1 style={{ fontFamily: FD, fontSize: "clamp(32px, 8vw, 44px)", lineHeight: 0.9, letterSpacing: "-0.02em", color: "var(--ink)", margin: "0 0 6px" }}>
-          MES COMBATS
+          MES SÉANCES
         </h1>
         <div style={{ fontFamily: FU, fontSize: 12, fontWeight: 500, color: "var(--ink-4)", marginBottom: 16 }}>
           {sessions.length} séance{sessions.length !== 1 ? "s" : ""} enregistrée{sessions.length !== 1 ? "s" : ""}
@@ -562,11 +562,11 @@ export default function HistoryPage() {
         {/* Fight record section header */}
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 14 }}>
           <div style={{ fontFamily: FD, fontSize: "clamp(18px, 5vw, 22px)", lineHeight: 1, letterSpacing: "-0.01em", color: "var(--ink)", whiteSpace: "nowrap" }}>
-            FIGHT RECORD
+            HISTORIQUE COMPLET
           </div>
           <div style={{ flex: 1, height: 1, background: "var(--rule)" }} />
           <div style={{ fontFamily: FN, fontSize: 10, fontWeight: 700, letterSpacing: "0.12em", color: "var(--ink-4)", whiteSpace: "nowrap" }}>
-            {filtered.length} combat{filtered.length !== 1 ? "s" : ""}
+            {filtered.length} séance{filtered.length !== 1 ? "s" : ""}
           </div>
         </div>
 
@@ -580,12 +580,18 @@ export default function HistoryPage() {
               transition={{ duration: 0.3, ease: EASE }}
               style={{ textAlign: "center", padding: "48px 24px 24px", display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}
             >
-              <div style={{ fontSize: 48, lineHeight: 1, marginBottom: 6 }}>🥊</div>
+              <div style={{ marginBottom: 16, color: "var(--siam)" }}>
+                <svg viewBox="0 0 24 24" width={64} height={64} fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="13" r="8"/>
+                  <path d="M12 9v4l3 2"/>
+                  <path d="M9 2h6"/>
+                </svg>
+              </div>
               <div style={{ fontFamily: FD, fontSize: "clamp(18px, 5vw, 22px)", letterSpacing: "0.02em", color: "var(--ink)" }}>
-                PREMIER COMBAT EN ATTENTE
+                PREMIÈRE SÉANCE EN ATTENTE
               </div>
               <p style={{ fontFamily: FU, fontSize: 13, color: "var(--ink-3)", lineHeight: 1.6, margin: 0, maxWidth: 240 }}>
-                Lance ta première séance pour commencer ton fight record.
+                Lance ta première séance pour commencer ton parcours.
               </p>
               <motion.button
                 whileTap={{ scale: 0.96 }}
@@ -631,7 +637,7 @@ export default function HistoryPage() {
                     {group.label}
                   </div>
                   <div style={{ fontFamily: FN, fontSize: 9, fontWeight: 700, letterSpacing: "0.14em", color: "var(--ink-4)", textTransform: "uppercase" }}>
-                    · {group.items.length} combat{group.items.length > 1 ? "s" : ""}
+                    · {group.items.length} séance{group.items.length > 1 ? "s" : ""}
                   </div>
                 </div>
 
