@@ -27,13 +27,13 @@ const barlowFont = Barlow_Condensed({
 })
 
 export const metadata: Metadata = {
-  title: "DT Muay Siam · Coach",
-  description: "DT Muay Siam — Application coach Muay Thaï, enfants 6-10 ans",
+  title: "ClinchLab",
+  description: "ClinchLab — Muay Thai Coach Companion, DT Muay Siam Edition, enfants 6-10 ans",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "DT Muay Siam",
+    title: "ClinchLab",
   },
   formatDetection: { telephone: false },
   icons: { apple: "/apple-icon" },

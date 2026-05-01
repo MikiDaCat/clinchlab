@@ -94,17 +94,16 @@ export default function InstallPrompt() {
           {/* Logo */}
           <div style={{
             width: 40, height: 40, borderRadius: 12, flexShrink: 0,
-            background: "var(--flame)", color: "white",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontFamily: D, fontWeight: 900, fontSize: 18,
-            boxShadow: "var(--glow-flame-sm)",
+            background: "#0A0A0A", overflow: "hidden",
+            border: "1px solid var(--rule-siam)",
           }}>
-            T
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.webp" alt="" aria-hidden width={40} height={40} style={{ objectFit: "contain" }} />
           </div>
 
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontFamily: D, fontSize: 14, fontWeight: 700, color: "var(--ink)", marginBottom: 2 }}>
-              Installer TMT
+              Installer ClinchLab
             </div>
             <div style={{ fontSize: 12, color: "var(--ink-3)", fontFamily: M }}>
               Accès rapide · Hors ligne · Plein écran

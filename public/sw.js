@@ -1,5 +1,5 @@
 /* ════════════════════════════════════════════════════════════
-   TMT · Service Worker
+   ClinchLab · Service Worker
    Stratégie : Cache-first pour assets statiques,
                Network-first pour pages et API.
    Permet l'installation PWA sur Android et iOS.
@@ -69,7 +69,7 @@ self.addEventListener("fetch", (event) => {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TMT · Hors ligne</title>
+  <title>ClinchLab · Hors ligne</title>
   <style>
     body { background: #050508; color: #f2ede3; font-family: system-ui; display: flex; align-items: center; justify-content: center; min-height: 100dvh; text-align: center; margin: 0; flex-direction: column; gap: 16px; }
     h1 { font-size: 24px; font-weight: 700; }
@@ -77,7 +77,7 @@ self.addEventListener("fetch", (event) => {
   </style>
 </head>
 <body>
-  <h1>TMT · Hors ligne</h1>
+  <h1>ClinchLab · Hors ligne</h1>
   <p>Reconnectez-vous pour accéder à l'app.</p>
 </body>
 </html>`,
