@@ -94,13 +94,14 @@ export default function InstallPrompt() {
           {/* Logo */}
           <div style={{
             width: 40, height: 40, borderRadius: 10, flexShrink: 0,
-            background: "#0A0A0A",
-            border: "2px solid #DC2626",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            overflow: "hidden",
+            background: "#DC2626",
+            padding: 1,
+            display: "flex",
           }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="" aria-hidden={true} style={{ width: "82%", height: "82%", objectFit: "contain" }} />
+            <div style={{ flex: 1, background: "#0A0A0A", borderRadius: 9, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo.png" alt="" aria-hidden={true} style={{ width: "82%", height: "82%", objectFit: "contain" }} />
+            </div>
           </div>
 
           <div style={{ flex: 1, minWidth: 0 }}>
