@@ -33,7 +33,7 @@ function Divider({ label }: { label: string }) {
   )
 }
 
-const TITLE_WORDS = ["DT", "MUAY", "SIAM"]
+const TITLE_WORDS = ["CLINCHLAB"]
 
 export default function Home() {
   const reduced = useReducedMotion()
@@ -53,19 +53,6 @@ export default function Home() {
   return (
     <div className="tmt-screen" style={{ background: "var(--paper)" }}>
 
-      {/* Mini header */}
-      <motion.div
-        initial={reduced ? false : { opacity: 0, y: -8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: EASE }}
-        style={{ display: "flex", alignItems: "center", gap: 8, padding: "10px 20px 0", flexShrink: 0 }}
-      >
-        <div style={{ width: 26, height: 26, borderRadius: 6, overflow: "hidden", border: "1px solid var(--rule-siam)", flexShrink: 0 }}>
-          <img src="/logo.webp" alt="" aria-hidden="true" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
-        </div>
-        <span style={{ fontFamily: U, fontSize: 15, fontWeight: 600, letterSpacing: "0.06em", color: "var(--ink-3)" }}>TMT</span>
-      </motion.div>
-
       <div className="tmt-scroll" style={{ padding: "0 20px 120px" }}>
 
         {/* ── HERO */}
@@ -83,7 +70,7 @@ export default function Home() {
 
           {/* "DT MUAY SIAM" — chaque mot ne se coupe jamais */}
           <h1
-            aria-label="DT Muay Siam"
+            aria-label="ClinchLab"
             style={{
               margin:         "0 0 8px",
               lineHeight:     0.95,
@@ -94,29 +81,32 @@ export default function Home() {
             }}
           >
             {TITLE_WORDS.map((word, wi) => {
-              const offset = TITLE_WORDS.slice(0, wi).join("").length
-              const isSiam = wi === 2
+              const offset      = TITLE_WORDS.slice(0, wi).join("").length
+              const isLastWord  = wi === TITLE_WORDS.length - 1
               return (
                 <span key={wi} style={{ display: "inline-block", whiteSpace: "nowrap" }}>
-                  {word.split("").map((char, ci) => (
-                    <motion.span
-                      key={ci}
-                      initial={reduced ? false : { opacity: 0, y: 28, filter: "blur(6px)" }}
-                      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                      transition={{ delay: 0.35 + (offset + ci) * 0.05, duration: 0.32, ease: EASE }}
-                      style={{
-                        display:       "inline-block",
-                        fontFamily:    D,
-                        fontSize:      "clamp(48px, 13vw, 72px)",
-                        fontWeight:    400,
-                        letterSpacing: "-0.01em",
-                        color:         isSiam ? "var(--siam)" : "var(--ink)",
-                        textShadow:    isSiam ? "0 0 30px rgba(220,38,38,0.55)" : "none",
-                      }}
-                    >
-                      {char}
-                    </motion.span>
-                  ))}
+                  {word.split("").map((char, ci) => {
+                    const isLastChar = isLastWord && ci === word.length - 1
+                    return (
+                      <motion.span
+                        key={ci}
+                        initial={reduced ? false : { opacity: 0, y: 28, filter: "blur(6px)" }}
+                        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                        transition={{ delay: 0.35 + (offset + ci) * 0.05, duration: 0.32, ease: EASE }}
+                        style={{
+                          display:       "inline-block",
+                          fontFamily:    D,
+                          fontSize:      "clamp(48px, 12vw, 80px)",
+                          fontWeight:    400,
+                          letterSpacing: "-0.02em",
+                          color:         isLastChar ? "var(--siam)" : "var(--ink)",
+                          textShadow:    isLastChar ? "0 0 30px rgba(220,38,38,0.55)" : "none",
+                        }}
+                      >
+                        {char}
+                      </motion.span>
+                    )
+                  })}
                 </span>
               )
             })}
@@ -129,7 +119,7 @@ export default function Home() {
             transition={{ delay: 0.9, duration: 0.5 }}
             style={{ fontFamily: U, fontSize: 11, fontWeight: 500, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--ink-3)", marginBottom: 28 }}
           >
-            Coach Edition · Enfants 6-10 ans
+            DT Muay Siam Edition · Enfants 6-10
           </motion.p>
 
           {/* CTA principal */}

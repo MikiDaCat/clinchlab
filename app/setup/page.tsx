@@ -1,13 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { createPortal } from "react-dom"
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import LevelChip from "@/components/LevelChip"
 import { Ico } from "@/lib/icons"
-import { COMBOS, GAMES, LEVEL_STYLES, type Game, type ComboLevel } from "@/lib/data"
+import { COMBOS, GAMES, LEVEL_STYLES, PHASES, type Game, type ComboLevel } from "@/lib/data"
 
 /* ── Constantes ──────────────────────────────────────────── */
 const D    = "var(--font-display)"
@@ -171,6 +171,15 @@ export default function SetupPage() {
   const incRest   = () => setRestIdx(i => Math.min(REST_STEPS.length - 1, i + 1))
   const decRounds = () => setRounds(r => Math.max(1, r - 1))
   const incRounds = () => setRounds(r => Math.min(12, r + 1))
+
+  const workDur  = WORK_STEPS[workIdx]
+  const restDur  = REST_STEPS[restIdx]
+
+  const totalMin = useMemo(() => {
+    const assaultsSec = rounds * workDur + Math.max(0, rounds - 1) * restDur
+    const fixedSec    = PHASES.filter(p => p.key !== "assauts").reduce((acc, p) => acc + p.dur, 0)
+    return Math.round((fixedSec + assaultsSec) / 60)
+  }, [rounds, workDur, restDur])
 
   const section = { hidden: { opacity: 0, y: 14 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: EASE } } }
 
@@ -429,8 +438,15 @@ export default function SetupPage() {
         initial={reduced ? false : { opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3, duration: 0.4, ease: EASE }}
-        className="tmt-above-nav"
-        style={{ padding: "12px 20px 0", flexShrink: 0, borderTop: "1px solid var(--rule)", background: "var(--paper)" }}
+        style={{
+          paddingTop:    "12px",
+          paddingLeft:   "20px",
+          paddingRight:  "20px",
+          paddingBottom: "max(20px, calc(env(safe-area-inset-bottom, 0px) + 16px))",
+          flexShrink:    0,
+          borderTop:     "1px solid var(--rule)",
+          background:    "var(--paper)",
+        }}
       >
         <motion.button
           whileHover={undefined}
@@ -465,7 +481,7 @@ export default function SetupPage() {
             Lancer la séance
           </div>
           <div style={{ fontFamily: N, fontSize: 12, fontWeight: 500, color: "rgba(255,255,255,0.70)", letterSpacing: "0.06em" }}>
-            50 min · 7 phases
+            {totalMin} min · {PHASES.length} phases
           </div>
         </motion.button>
       </motion.div>
