@@ -421,11 +421,20 @@ export default function TimerPage() {
               </div>
 
               {/* Timer preview + START */}
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "8px 20px 0", gap: 16 }}>
+              <div style={{
+                display:       "flex",
+                flexDirection: "column",
+                alignItems:    "center",
+                paddingTop:    8,
+                paddingLeft:   20,
+                paddingRight:  20,
+                paddingBottom: "max(20px, calc(env(safe-area-inset-bottom, 0px) + 16px))",
+                gap:           16,
+              }}>
                 <div style={{ pointerEvents: "none", width: "100%" }}>
                   <GiantTimer remaining={ringDuration} state="pause" />
                 </div>
-                <div className="tmt-above-nav" style={{ width: "100%" }}>
+                <div style={{ width: "100%" }}>
                   <motion.button
                     className="tmt-btn flame lg"
                     whileTap={{ scale: 0.96 }}
