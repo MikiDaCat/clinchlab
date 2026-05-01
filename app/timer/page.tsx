@@ -420,17 +420,19 @@ export default function TimerPage() {
                 </AnimatePresence>
               </div>
 
-              {/* Timer preview + START */}
-              <div style={{
-                display:       "flex",
-                flexDirection: "column",
-                alignItems:    "center",
-                paddingTop:    4,
-                paddingLeft:   20,
-                paddingRight:  20,
-                paddingBottom: "max(20px, calc(env(safe-area-inset-bottom, 0px) + 16px))",
-                gap:           12,
-              }}>
+              {/* Timer preview + START — tmt-above-nav gère paddingBottom = 88px+safe-area */}
+              <div
+                className="tmt-above-nav"
+                style={{
+                  display:       "flex",
+                  flexDirection: "column",
+                  alignItems:    "center",
+                  paddingTop:    4,
+                  paddingLeft:   20,
+                  paddingRight:  20,
+                  gap:           12,
+                }}
+              >
                 <div style={{ pointerEvents: "none", width: "100%" }}>
                   <GiantTimer remaining={ringDuration} state="pause" size="compact" />
                 </div>
