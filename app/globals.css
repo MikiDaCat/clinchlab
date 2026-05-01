@@ -98,6 +98,7 @@
   --font-timer: var(--font-num);
 
   /* ─── TAILLES TIMER ─────────────────────────────────────── */
+  --timer-canonical: 168px;
   --timer-xs:  56px;
   --timer-sm:  80px;
   --timer-md: 120px;
@@ -133,6 +134,11 @@
   --glow-flame-sm: var(--glow-siam-sm);
   --glow-frost:    0 0 30px oklch(0.65 0.18 225 / 0.45);
   --glow-frost-sm: 0 0 16px oklch(0.65 0.18 225 / 0.50);
+
+  /* Timer glows — cinematic touches */
+  --glow-timer-active:  0 0 50px rgba(220, 38, 38, 0.55), 0 0 100px rgba(220, 38, 38, 0.20);
+  --glow-timer-warning: 0 0 60px rgba(251, 191, 36, 0.65), 0 0 120px rgba(251, 191, 36, 0.25);
+  --glow-timer-rest:    0 0 40px rgba(16, 185, 129, 0.35);
   --glow-amber:    0 0 30px oklch(0.88 0.22 95 / 0.55);
   --glow-amber-sm: 0 0 16px oklch(0.88 0.22 95 / 0.60);
 
