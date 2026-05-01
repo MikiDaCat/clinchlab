@@ -94,11 +94,12 @@ export default function InstallPrompt() {
           {/* Logo */}
           <div style={{
             width: 40, height: 40, borderRadius: 12, flexShrink: 0,
-            background: "#0A0A0A", overflow: "hidden",
-            border: "1px solid var(--rule-siam)",
+            background: "#DC2626",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            overflow: "hidden",
           }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.webp" alt="" aria-hidden width={40} height={40} style={{ objectFit: "contain" }} />
+            <img src="/logo.webp" alt="" aria-hidden={true} style={{ width: "82%", height: "82%", objectFit: "contain" }} />
           </div>
 
           <div style={{ flex: 1, minWidth: 0 }}>

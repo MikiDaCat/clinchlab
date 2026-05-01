@@ -8,7 +8,7 @@
   "display_override": ["standalone", "fullscreen"],
   "orientation": "portrait-primary",
   "theme_color": "#0A0A0A",
-  "background_color": "#0A0A0A",
+  "background_color": "#DC2626",
   "lang": "fr",
   "categories": ["sports", "health & fitness", "education"],
   "icons": [

@@ -1,21 +1,29 @@
 import { ImageResponse } from "next/og"
+import { readFileSync } from "fs"
+import { join } from "path"
 
-export const runtime = "edge"
-
-function CLIcon({ size }: { size: number }) {
-  const r     = Math.round(size * 0.225)
-  const inner = Math.round(size * 0.80)
-  const ri    = Math.round(inner * 0.20)
-  const fs    = Math.round(size * 0.38)
-  return (
-    <div style={{ background: "#0A0A0A", width: size, height: size, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: r }}>
-      <div style={{ background: "#DC2626", width: inner, height: inner, borderRadius: ri, display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontSize: fs, fontWeight: 900, fontFamily: "sans-serif", letterSpacing: -4 }}>
-        CL
-      </div>
-    </div>
-  )
-}
+/* Logo chargé une fois au démarrage du module (Node.js runtime) */
+let logoB64 = ""
+try {
+  const buf = readFileSync(join(process.cwd(), "public", "logo.webp"))
+  logoB64 = `data:image/webp;base64,${buf.toString("base64")}`
+} catch { /* fallback texte si fichier absent */ }
 
 export async function GET() {
-  return new ImageResponse(<CLIcon size={512} />, { width: 512, height: 512 })
+  return new ImageResponse(
+    <div style={{ width: 512, height: 512, background: "#DC2626", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{
+        width: "78%", height: "78%",
+        backgroundImage: logoB64 ? `url('${logoB64}')` : "none",
+        backgroundSize: "contain",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        color: "white", fontSize: 200, fontWeight: 900, fontFamily: "sans-serif",
+      }}>
+        {!logoB64 && "CL"}
+      </div>
+    </div>,
+    { width: 512, height: 512 }
+  )
 }
