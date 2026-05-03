@@ -142,7 +142,6 @@ export default function RunPage() {
   const [showStop,      setShowStop]      = useState(false)
   const [isFocusMode,   setIsFocusMode]   = useState(false)
   const [showCountdown, setShowCountdown] = useState(true)
-  const [resumeData,    setResumeData]    = useState<{ phaseIndex: number; remaining: number; phaseName: string } | null>(null)
 
   const session      = useSessionPersistence()
   const warningFiredRef = useRef(false)
@@ -187,12 +186,14 @@ export default function RunPage() {
     return () => clearInterval(id)
   }, [isPlaying, isDone, phaseIdx, playSound, vibrate])
 
-  /* ── Resume au mount ─────────────────────────────────────── */
+  /* ── Resume auto-silencieux (sans bande, paused) ────────── */
   useEffect(() => {
     const snap = session.load()
     if (snap) {
-      setResumeData({ phaseIndex: snap.phaseIndex, remaining: snap.remaining, phaseName: snap.phaseName })
+      setPhaseIdx(snap.phaseIndex)
+      setRemaining(snap.remaining)
       setShowCountdown(false)
+      setIsPlaying(false)
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -291,17 +292,6 @@ export default function RunPage() {
     router.push("/")
   }, [router]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleResume = useCallback(() => {
-    if (!resumeData) return
-    setPhaseIdx(resumeData.phaseIndex); setRemaining(resumeData.remaining)
-    setResumeData(null); setShowCountdown(false); setIsPlaying(false)
-  }, [resumeData])
-
-  const handleNewSession = useCallback(() => {
-    session.clear(); setResumeData(null)
-    setPhaseIdx(INITIAL_PHASE); setRemaining(0); setShowCountdown(true)
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
   const handleLongPress = useCallback(() => {
     setIsPlaying(false); setShowStop(true); vibrate("emergency_stop")
   }, [vibrate])
@@ -314,29 +304,6 @@ export default function RunPage() {
   ═══════════════════════════════════════════════════════════ */
   return (
     <div className="tmt-screen" style={{ background: "var(--paper)", display: "flex", flexDirection: "column", paddingTop: "0" }}>
-
-      {/* ── Resume banner */}
-      <AnimatePresence>
-        {resumeData && (
-          <motion.div
-            initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}
-            transition={{ type: "spring", stiffness: 300, damping: 28 }}
-            style={{ flexShrink: 0, padding: "10px 16px", background: "var(--paper-3)", borderBottom: "1px solid var(--frost-line)" }}
-          >
-            <div style={{ fontFamily: N, fontSize: 10, fontWeight: 700, color: "var(--frost)", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 6 }}>
-              Séance en cours · Phase {resumeData.phaseIndex + 1} — {resumeData.phaseName}
-            </div>
-            <div style={{ display: "flex", gap: 8 }}>
-              <motion.button whileTap={{ scale: 0.94 }} onClick={handleResume}
-                style={{ flex: 1, height: 40, borderRadius: "var(--r-2)", background: "var(--frost)", color: "#000", border: "none", cursor: "pointer", fontFamily: U, fontWeight: 700, fontSize: 13, boxShadow: "var(--glow-frost-sm)" }}
-              >Reprendre</motion.button>
-              <motion.button whileTap={{ scale: 0.94 }} onClick={handleNewSession}
-                style={{ flex: 1, height: 40, borderRadius: "var(--r-2)", background: "transparent", color: "var(--ink-3)", border: "1px solid var(--rule-2)", cursor: "pointer", fontSize: 13, fontFamily: U }}
-              >Nouvelle séance</motion.button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* ── Header minimal : × + ⛶ — masqué en mode focus */}
       <div style={{

@@ -48,6 +48,11 @@ export default function Home() {
       const snap = JSON.parse(raw) as { phaseIndex: number; savedAt: number }
       if (Date.now() - snap.savedAt < 30 * 60 * 1000) setActivePhaseIdx(snap.phaseIndex)
     } catch { }
+    /* Verrou portrait — tentative Android/Chrome PWA */
+    try {
+      const so = (screen as Screen & { orientation?: { lock?: (o: string) => Promise<void> } }).orientation
+      so?.lock?.("portrait").catch(() => {})
+    } catch { }
   }, [])
 
   return (
@@ -122,42 +127,49 @@ export default function Home() {
             DT Muay Siam Edition · Enfants 6-10
           </motion.p>
 
-          {/* CTA principal */}
+          {/* CTA — Reprendre si session active, sinon Configurer */}
           <motion.div
             initial={reduced ? false : { opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.1, duration: 0.42, ease: EASE }}
-            style={{ width: "100%" }}
+            style={{ width: "100%", display: "flex", flexDirection: "column", gap: 10 }}
           >
+            {activePhaseIdx >= 0 && (
+              <Link href="/run">
+                <motion.button
+                  whileTap={reduced ? {} : { scale: 0.95 }}
+                  style={{
+                    width: "100%", minHeight: 66, borderRadius: 12,
+                    background: "var(--frost)", border: "none", color: "#050508",
+                    fontFamily: U, fontSize: 18, fontWeight: 700,
+                    letterSpacing: "0.05em", textTransform: "uppercase", cursor: "pointer",
+                    display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+                    boxShadow: "0 0 32px oklch(0.65 0.18 225 / 0.45)",
+                  }}
+                >
+                  <svg viewBox="0 0 24 24" width={22} height={22} fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+                  Reprendre la séance
+                </motion.button>
+              </Link>
+            )}
             <Link href="/setup">
               <motion.button
                 whileHover={reduced ? {} : { scale: 1.025, boxShadow: "0 0 64px rgba(220,38,38,0.60)" }}
                 whileTap={reduced ? {} : { scale: 0.95 }}
                 style={{
-                  width:          "100%",
-                  minHeight:      66,
-                  borderRadius:   12,
-                  background:     "var(--siam)",
-                  border:         "none",
-                  color:          "white",
-                  fontFamily:     U,
-                  fontSize:       18,
-                  fontWeight:     700,
-                  letterSpacing:  "0.05em",
-                  textTransform:  "uppercase",
-                  cursor:         "pointer",
-                  display:        "flex",
-                  alignItems:     "center",
-                  justifyContent: "center",
-                  gap:            10,
-                  boxShadow:      "0 0 40px rgba(220,38,38,0.42)",
-                  transition:     "box-shadow 200ms ease",
+                  width: "100%", minHeight: activePhaseIdx >= 0 ? 52 : 66, borderRadius: 12,
+                  background: activePhaseIdx >= 0 ? "transparent" : "var(--siam)",
+                  border: activePhaseIdx >= 0 ? "1px solid var(--rule-2)" : "none",
+                  color: activePhaseIdx >= 0 ? "var(--ink-2)" : "white",
+                  fontFamily: U, fontSize: activePhaseIdx >= 0 ? 15 : 18, fontWeight: 700,
+                  letterSpacing: "0.05em", textTransform: "uppercase", cursor: "pointer",
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+                  boxShadow: activePhaseIdx >= 0 ? "none" : "0 0 40px rgba(220,38,38,0.42)",
+                  transition: "box-shadow 200ms ease",
                 }}
               >
-                <svg viewBox="0 0 24 24" width={22} height={22} fill="currentColor" aria-hidden="true">
-                  <path d="M8 5v14l11-7z"/>
-                </svg>
-                Configurer la séance
+                <svg viewBox="0 0 24 24" width={activePhaseIdx >= 0 ? 18 : 22} height={activePhaseIdx >= 0 ? 18 : 22} fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+                {activePhaseIdx >= 0 ? "Nouvelle séance" : "Configurer la séance"}
               </motion.button>
             </Link>
           </motion.div>
