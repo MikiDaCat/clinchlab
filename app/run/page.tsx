@@ -313,7 +313,7 @@ export default function RunPage() {
      JSX — LAYOUT BROADCAST V2
   ═══════════════════════════════════════════════════════════ */
   return (
-    <div className="tmt-screen" style={{ background: "var(--paper)", display: "flex", flexDirection: "column", paddingTop: "env(safe-area-inset-top, 20px)" }}>
+    <div className="tmt-screen" style={{ background: "var(--paper)", display: "flex", flexDirection: "column", paddingTop: "0" }}>
 
       {/* ── Resume banner */}
       <AnimatePresence>
@@ -343,7 +343,7 @@ export default function RunPage() {
         display: isFocusMode ? "none" : "flex",
         alignItems: "center", justifyContent: "space-between",
         padding: "12px 20px",
-        paddingTop: "10px",
+        paddingTop: "max(env(safe-area-inset-top, 0px), 50px)",
         flexShrink: 0,
       }}>
         <motion.button
@@ -434,7 +434,7 @@ export default function RunPage() {
         )}
 
         {/* Timer géant */}
-        <div style={{ position: "relative", zIndex: 2 }}>
+        <div style={{ position: "relative", zIndex: 2, overflow: "hidden" }}>
           <GiantTimer remaining={remaining} state={timerState} label={phase?.timerLabel} />
         </div>
 

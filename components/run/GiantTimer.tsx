@@ -12,8 +12,8 @@ interface GiantTimerProps {
 }
 
 const FONT_SIZE = {
-  default: "clamp(130px, 38vw, 250px)",
-  compact: "clamp(80px, 24vw, 140px)",
+  default: "clamp(100px, min(38vw, 28vh), 250px)",
+  compact: "clamp(70px, min(24vw, 22vh), 140px)",
 } as const
 
 function fmt(sec: number): string {

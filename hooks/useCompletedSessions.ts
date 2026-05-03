@@ -29,12 +29,28 @@ export function useCompletedSessions() {
     })
   }, [])
 
+  const updateNote = useCallback((id: number, note: string) => {
+    setSessions(prev => {
+      const next = prev.map(s => s.id === id ? { ...s, note } : s)
+      localStorage.setItem(KEY, JSON.stringify(next))
+      return next
+    })
+  }, [])
+
+  const deleteSession = useCallback((id: number) => {
+    setSessions(prev => {
+      const next = prev.filter(s => s.id !== id)
+      localStorage.setItem(KEY, JSON.stringify(next))
+      return next
+    })
+  }, [])
+
   const clearAll = useCallback(() => {
     localStorage.removeItem(KEY)
     setSessions([])
   }, [])
 
-  return { sessions, addSession, clearAll }
+  return { sessions, addSession, updateNote, deleteSession, clearAll }
 }
 
 /* Fonction standalone (appelable hors composant) */

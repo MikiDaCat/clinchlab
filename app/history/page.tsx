@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useMemo, useEffect } from "react"
+import { useState, useRef, useMemo, useEffect, useCallback } from "react"
 import { createPortal } from "react-dom"
 import { motion, AnimatePresence, useInView, useReducedMotion, useDragControls } from "framer-motion"
 import { useRouter } from "next/navigation"
@@ -76,6 +76,15 @@ function IcoChevRight() {
   return (
     <svg viewBox="0 0 24 24" width={14} height={14} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
       <path d="M9 6l6 6-6 6"/>
+    </svg>
+  )
+}
+function IcoTrash() {
+  return (
+    <svg viewBox="0 0 24 24" width={15} height={15} fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="3 6 5 6 21 6"/>
+      <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+      <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
     </svg>
   )
 }
@@ -284,13 +293,16 @@ function SessionCard({
 
 /* ── SessionDetail (fullscreen portal) ───────────────────── */
 function SessionDetail({
-  session, combatN, onClose, onRedo,
+  session, combatN, onClose, onRedo, onNoteUpdate, onDelete,
 }: {
   session: Session; combatN: number; onClose: () => void; onRedo: () => void
+  onNoteUpdate: (note: string) => void; onDelete: () => void
 }) {
   const reduced      = useReducedMotion()
   const dragControls = useDragControls()
   const steps        = session.combo.split(/\s*[·—,]\s*/).filter(Boolean)
+  const [noteText,          setNoteText]          = useState(session.note)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   const content = (
     <>
@@ -408,19 +420,24 @@ function SessionDetail({
             </div>
           </div>
 
-          {/* Note coach */}
-          {session.note && (
-            <div style={{ marginBottom: 28 }}>
-              <div style={{ fontFamily: FN, fontSize: 10, fontWeight: 700, letterSpacing: "0.16em", color: "var(--ink-3)", textTransform: "uppercase", marginBottom: 12 }}>
-                Note coach
-              </div>
-              <div style={{ background: "oklch(0.58 0.26 15 / 0.08)", border: "1px solid oklch(0.58 0.26 15 / 0.20)", borderRadius: 10, padding: "12px 16px" }}>
-                <p style={{ fontFamily: FU, fontSize: 13, fontWeight: 500, color: "var(--ink-2)", lineHeight: 1.65, margin: 0, fontStyle: "italic" }}>
-                  « {session.note} »
-                </p>
-              </div>
+          {/* Note de séance éditable */}
+          <div style={{ marginBottom: 20 }}>
+            <div style={{ fontFamily: FN, fontSize: 10, fontWeight: 700, letterSpacing: "0.16em", color: "var(--ink-3)", textTransform: "uppercase", marginBottom: 10 }}>
+              Note de séance
             </div>
-          )}
+            <textarea
+              className="tmt-textarea"
+              value={noteText}
+              onChange={e => setNoteText(e.target.value)}
+              onBlur={() => onNoteUpdate(noteText)}
+              placeholder="Ressenti, observations, points à travailler…"
+              maxLength={500}
+              style={{ minHeight: 80, fontSize: 13, resize: "vertical" }}
+            />
+            <div style={{ textAlign: "right", fontFamily: FN, fontSize: 11, color: "var(--ink-4)", marginTop: 4 }}>
+              {noteText.length}/500
+            </div>
+          </div>
 
           {/* CTA */}
           <motion.button
@@ -443,11 +460,65 @@ function SessionDetail({
               letterSpacing:  "0.06em",
               textTransform:  "uppercase",
               boxShadow:      "0 0 24px oklch(0.58 0.26 15 / 0.28)",
+              marginBottom:   8,
             }}
           >
             <IcoPlay /> Refaire cette séance
           </motion.button>
+
+          {/* Suppression */}
+          <motion.button
+            whileTap={{ scale: 0.96 }}
+            onClick={() => setShowDeleteConfirm(true)}
+            style={{
+              display: "flex", alignItems: "center", justifyContent: "center",
+              gap: 8, width: "100%", height: 48, borderRadius: 12,
+              background: "transparent", color: "var(--siam)",
+              border: "1px solid var(--rule-siam)", cursor: "pointer",
+              fontFamily: FU, fontSize: 14, fontWeight: 600,
+            }}
+          >
+            <IcoTrash /> Supprimer cette séance
+          </motion.button>
         </div>
+
+        {/* Confirmation suppression — dans le panel, hors du scroll */}
+        {showDeleteConfirm && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+              style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.72)", zIndex: 10 }}
+              onClick={() => setShowDeleteConfirm(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ type: "spring", stiffness: 380, damping: 30 }}
+              style={{
+                position: "absolute", bottom: "50%", left: 20, right: 20,
+                transform: "translateY(50%)", zIndex: 11,
+                background: "var(--paper-3)", borderRadius: 16,
+                border: "1px solid var(--rule-siam)", padding: "24px 20px 20px",
+              }}
+            >
+              <p style={{ fontFamily: FD, fontSize: 20, letterSpacing: "0.04em", textTransform: "uppercase", color: "var(--ink)", marginBottom: 8, fontWeight: 400 }}>
+                Supprimer cette séance ?
+              </p>
+              <p style={{ fontFamily: FU, fontSize: 13, color: "var(--ink-3)", lineHeight: 1.55, marginBottom: 20 }}>
+                Cette action est irréversible.
+              </p>
+              <div style={{ display: "flex", gap: 10 }}>
+                <motion.button whileTap={{ scale: 0.96 }} onClick={() => setShowDeleteConfirm(false)}
+                  style={{ flex: 1, height: 48, borderRadius: "var(--r-2)", background: "var(--card-2)", color: "var(--ink)", border: "none", cursor: "pointer", fontFamily: FU, fontWeight: 600, fontSize: 14 }}>
+                  Annuler
+                </motion.button>
+                <motion.button whileTap={{ scale: 0.96 }} onClick={onDelete}
+                  style={{ flex: 1, height: 48, borderRadius: "var(--r-2)", background: "var(--siam)", color: "white", border: "none", cursor: "pointer", fontFamily: FU, fontWeight: 700, fontSize: 14 }}>
+                  Supprimer
+                </motion.button>
+              </div>
+            </motion.div>
+          </>
+        )}
       </motion.div>
     </>
   )
@@ -468,7 +539,7 @@ const PERIODS = [
 
 export default function HistoryPage() {
   const router = useRouter()
-  const { sessions } = useCompletedSessions()
+  const { sessions, updateNote, deleteSession } = useCompletedSessions()
 
   const [period,     setPeriod]     = useState(Infinity)
   const [detailSess, setDetailSess] = useState<Session | null>(null)
@@ -497,6 +568,17 @@ export default function HistoryPage() {
     setDetailSess(null)
     router.push(`/setup?sessionId=${detailSess.id}`)
   }
+
+  const handleNoteUpdate = useCallback((note: string) => {
+    if (!detailSess) return
+    updateNote(detailSess.id, note)
+  }, [detailSess, updateNote])
+
+  const handleDelete = useCallback(() => {
+    if (!detailSess) return
+    deleteSession(detailSess.id)
+    setDetailSess(null)
+  }, [detailSess, deleteSession])
 
   return (
     <div className="tmt-screen" style={{ background: "var(--paper)" }}>
@@ -668,6 +750,8 @@ export default function HistoryPage() {
             combatN={detailN}
             onClose={() => setDetailSess(null)}
             onRedo={handleRedo}
+            onNoteUpdate={handleNoteUpdate}
+            onDelete={handleDelete}
           />
         )}
       </AnimatePresence>
