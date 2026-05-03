@@ -140,6 +140,7 @@ export default function RunPage() {
   const [drawerOpen,    setDrawerOpen]    = useState(false)
   const [isFullscreen,  setIsFullscreen]  = useState(false)
   const [showStop,      setShowStop]      = useState(false)
+  const [isFocusMode,   setIsFocusMode]   = useState(false)
   const [showCountdown, setShowCountdown] = useState(true)
   const [resumeData,    setResumeData]    = useState<{ phaseIndex: number; remaining: number; phaseName: string } | null>(null)
 
@@ -237,12 +238,18 @@ export default function RunPage() {
   }, [])
 
   const toggleFullscreen = useCallback(() => {
+    /* iOS fallback : sortir du mode focus si actif */
+    if (isFocusMode) { setIsFocusMode(false); return }
     type FSEl = HTMLElement & { webkitRequestFullscreen?(): Promise<void> }
     const el = document.documentElement as FSEl
-    if (!document.fullscreenElement) {
-      ;(el.requestFullscreen?.() ?? el.webkitRequestFullscreen?.())?.catch(() => {})
-    } else { document.exitFullscreen?.().catch(() => {}) }
-  }, [])
+    if (document.fullscreenElement) {
+      document.exitFullscreen?.().catch(() => {})
+    } else {
+      const p = el.requestFullscreen?.() ?? el.webkitRequestFullscreen?.()
+      if (p) p.catch(() => setIsFocusMode(true))   /* iOS : pas de fullscreen API → focus mode */
+      else   setIsFocusMode(true)
+    }
+  }, [isFocusMode])
 
   /* ── Handlers ────────────────────────────────────────────── */
   const handleCountdownCount = useCallback((value: CountdownValue) => {
@@ -306,7 +313,7 @@ export default function RunPage() {
      JSX — LAYOUT BROADCAST V2
   ═══════════════════════════════════════════════════════════ */
   return (
-    <div className="tmt-screen" style={{ background: "var(--paper)", display: "flex", flexDirection: "column" }}>
+    <div className="tmt-screen" style={{ background: "var(--paper)", display: "flex", flexDirection: "column", paddingTop: "env(safe-area-inset-top, 20px)" }}>
 
       {/* ── Resume banner */}
       <AnimatePresence>
@@ -331,11 +338,12 @@ export default function RunPage() {
         )}
       </AnimatePresence>
 
-      {/* ── Header minimal : × + ⛶ */}
+      {/* ── Header minimal : × + ⛶ — masqué en mode focus */}
       <div style={{
-        display: "flex", alignItems: "center", justifyContent: "space-between",
+        display: isFocusMode ? "none" : "flex",
+        alignItems: "center", justifyContent: "space-between",
         padding: "12px 20px",
-        paddingTop: "calc(env(safe-area-inset-top, 0px) + 10px)",
+        paddingTop: "10px",
         flexShrink: 0,
       }}>
         <motion.button
@@ -359,12 +367,12 @@ export default function RunPage() {
 
         <motion.button
           className="tmt-iconbtn"
-          aria-label={isFullscreen ? "Quitter le plein écran" : "Mode plein écran"}
+          aria-label={(isFullscreen || isFocusMode) ? "Quitter le plein écran" : "Mode plein écran"}
           whileTap={{ scale: 0.88 }}
           onClick={toggleFullscreen}
           style={{ background: "var(--paper-3)", border: "1px solid var(--rule)" }}
         >
-          {isFullscreen ? (
+          {(isFullscreen || isFocusMode) ? (
             <svg viewBox="0 0 24 24" width={18} height={18} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
               <polyline points="8 3 3 3 3 8"/><polyline points="21 8 21 3 16 3"/><polyline points="3 16 3 21 8 21"/><polyline points="16 21 21 21 21 16"/>
             </svg>
@@ -376,8 +384,8 @@ export default function RunPage() {
         </motion.button>
       </div>
 
-      {/* ── Phase name + progress bar */}
-      <div style={{ padding: "0 24px 16px", flexShrink: 0 }}>
+      {/* ── Phase name + progress bar — masqué en mode focus */}
+      <div style={{ display: isFocusMode ? "none" : "block", padding: "0 24px 16px", flexShrink: 0 }}>
         <AnimatePresence mode="wait">
           <motion.div
             key={phaseIdx}
@@ -414,11 +422,11 @@ export default function RunPage() {
           padding:        "0 16px",
         }}
       >
-        {/* Tap-anywhere overlay (pause/play) */}
+        {/* Tap-anywhere : en mode focus → sortir du focus ; sinon pause/play */}
         {!isDone && (
           <div
-            onClick={handleToggle}
-            aria-label={isPlaying ? "Taper pour mettre en pause" : "Taper pour reprendre"}
+            onClick={isFocusMode ? () => setIsFocusMode(false) : handleToggle}
+            aria-label={isFocusMode ? "Taper pour quitter le mode focus" : isPlaying ? "Taper pour mettre en pause" : "Taper pour reprendre"}
             role="button"
             tabIndex={-1}
             style={{ position: "absolute", inset: 0, zIndex: 1, cursor: "pointer", touchAction: "manipulation" }}
@@ -454,8 +462,8 @@ export default function RunPage() {
         </div>
       </div>
 
-      {/* ── Drawer trigger (phases combo/game/tech) */}
-      {!isDone && phase && (phase.kind === "combo" || phase.kind === "tech" || phase.kind === "game") && (
+      {/* ── Drawer trigger — masqué en mode focus */}
+      {!isFocusMode && !isDone && phase && (phase.kind === "combo" || phase.kind === "tech" || phase.kind === "game") && (
         <motion.button
           onClick={() => setDrawerOpen(true)}
           aria-label={`Voir les détails — ${phase.name}`}
@@ -482,8 +490,8 @@ export default function RunPage() {
         </motion.button>
       )}
 
-      {/* ── Controls */}
-      <div style={{ padding: "12px 20px", paddingBottom: "max(20px, calc(env(safe-area-inset-bottom, 0px) + 16px))", flexShrink: 0 }}>
+      {/* ── Controls — masqués en mode focus */}
+      <div style={{ display: isFocusMode ? "none" : "block", padding: "12px 20px", paddingBottom: "max(20px, calc(env(safe-area-inset-bottom, 0px) + 16px))", flexShrink: 0 }}>
         <Controls
           isPlaying={isPlaying}
           timerState={timerState}

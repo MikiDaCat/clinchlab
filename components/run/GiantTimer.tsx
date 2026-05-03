@@ -42,6 +42,7 @@ export default function GiantTimer({ remaining, state, label, size = "default" }
   const color        = COLORS[state]
   const glow         = reduced ? "none" : GLOWS[state]
   const digits       = fmt(remaining)
+  const [mm, ss]     = digits.split(":")
   const prevStateRef = useRef<TimerState>(state)
   const [flash, setFlash] = useState(false)
   const [pulse, setPulse] = useState(false)
@@ -118,7 +119,7 @@ export default function GiantTimer({ remaining, state, label, size = "default" }
           willChange:         state === "active" ? "text-shadow" : "auto",
         } as React.CSSProperties}
       >
-        {digits}
+        {mm}<span style={{ padding: "0 0.04em", letterSpacing: 0 }}>:</span>{ss}
       </motion.span>
     </>
   )
