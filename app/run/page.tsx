@@ -401,7 +401,7 @@ export default function RunPage() {
         )}
 
         {/* Timer géant */}
-        <div style={{ position: "relative", zIndex: 2, overflow: "hidden" }}>
+        <div style={{ position: "relative", zIndex: 2 }}>
           <GiantTimer remaining={remaining} state={timerState} label={phase?.timerLabel} />
         </div>
 
