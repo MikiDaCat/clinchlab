@@ -138,7 +138,9 @@ export default function RunPage() {
   const [remaining,     setRemaining]     = useState(0)
   const [isPlaying,     setIsPlaying]     = useState(false)
   const [drawerOpen,    setDrawerOpen]    = useState(false)
+  const [isFullscreen,  setIsFullscreen]  = useState(false)
   const [showStop,      setShowStop]      = useState(false)
+  const [isFocusMode,   setIsFocusMode]   = useState(false)
   const [showCountdown, setShowCountdown] = useState(true)
 
   const session      = useSessionPersistence()
@@ -228,6 +230,28 @@ export default function RunPage() {
     if (isPlaying && !isDone) wakeLock.acquire(); else wakeLock.release()
   }, [isPlaying, isDone]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  /* ── Fullscreen ──────────────────────────────────────────── */
+  useEffect(() => {
+    const onChange = () => setIsFullscreen(!!document.fullscreenElement)
+    document.addEventListener("fullscreenchange", onChange)
+    document.addEventListener("webkitfullscreenchange", onChange)
+    return () => { document.removeEventListener("fullscreenchange", onChange); document.removeEventListener("webkitfullscreenchange", onChange) }
+  }, [])
+
+  const toggleFullscreen = useCallback(() => {
+    /* iOS fallback : sortir du mode focus si actif */
+    if (isFocusMode) { setIsFocusMode(false); return }
+    type FSEl = HTMLElement & { webkitRequestFullscreen?(): Promise<void> }
+    const el = document.documentElement as FSEl
+    if (document.fullscreenElement) {
+      document.exitFullscreen?.().catch(() => {})
+    } else {
+      const p = el.requestFullscreen?.() ?? el.webkitRequestFullscreen?.()
+      if (p) p.catch(() => setIsFocusMode(true))   /* iOS : pas de fullscreen API → focus mode */
+      else   setIsFocusMode(true)
+    }
+  }, [isFocusMode])
+
   /* ── Handlers ────────────────────────────────────────────── */
   const handleCountdownCount = useCallback((value: CountdownValue) => {
     if (value === 3)    playSound("countdown_3")
@@ -281,9 +305,9 @@ export default function RunPage() {
   return (
     <div className="tmt-screen" style={{ background: "var(--paper)", display: "flex", flexDirection: "column", paddingTop: "0" }}>
 
-      {/* ── Header minimal : × + indicateur phase */}
+      {/* ── Header minimal : × + ⛶ — masqué en mode focus */}
       <div style={{
-        display: "flex",
+        display: isFocusMode ? "none" : "flex",
         alignItems: "center", justifyContent: "space-between",
         padding: "12px 20px",
         paddingTop: "max(env(safe-area-inset-top, 0px), 50px)",
@@ -308,10 +332,27 @@ export default function RunPage() {
           </span>
         </div>
 
+        <motion.button
+          className="tmt-iconbtn"
+          aria-label={(isFullscreen || isFocusMode) ? "Quitter le plein écran" : "Mode plein écran"}
+          whileTap={{ scale: 0.88 }}
+          onClick={toggleFullscreen}
+          style={{ background: "var(--paper-3)", border: "1px solid var(--rule)" }}
+        >
+          {(isFullscreen || isFocusMode) ? (
+            <svg viewBox="0 0 24 24" width={18} height={18} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <polyline points="8 3 3 3 3 8"/><polyline points="21 8 21 3 16 3"/><polyline points="3 16 3 21 8 21"/><polyline points="16 21 21 21 21 16"/>
+            </svg>
+          ) : (
+            <svg viewBox="0 0 24 24" width={18} height={18} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>
+            </svg>
+          )}
+        </motion.button>
       </div>
 
-      {/* ── Phase name + progress bar */}
-      <div style={{ padding: "0 24px 16px", flexShrink: 0 }}>
+      {/* ── Phase name + progress bar — masqué en mode focus */}
+      <div style={{ display: isFocusMode ? "none" : "block", padding: "0 24px 16px", flexShrink: 0 }}>
         <AnimatePresence mode="wait">
           <motion.div
             key={phaseIdx}
@@ -348,11 +389,11 @@ export default function RunPage() {
           padding:        "0 16px",
         }}
       >
-        {/* Tap-anywhere overlay (pause/play) */}
+        {/* Tap-anywhere : en mode focus → sortir du focus ; sinon pause/play */}
         {!isDone && (
           <div
-            onClick={handleToggle}
-            aria-label={isPlaying ? "Taper pour mettre en pause" : "Taper pour reprendre"}
+            onClick={isFocusMode ? () => setIsFocusMode(false) : handleToggle}
+            aria-label={isFocusMode ? "Taper pour quitter le mode focus" : isPlaying ? "Taper pour mettre en pause" : "Taper pour reprendre"}
             role="button"
             tabIndex={-1}
             style={{ position: "absolute", inset: 0, zIndex: 1, cursor: "pointer", touchAction: "manipulation" }}
@@ -388,8 +429,8 @@ export default function RunPage() {
         </div>
       </div>
 
-      {/* ── Drawer trigger (phases combo/game/tech) */}
-      {!isDone && phase && (phase.kind === "combo" || phase.kind === "tech" || phase.kind === "game") && (
+      {/* ── Drawer trigger — masqué en mode focus */}
+      {!isFocusMode && !isDone && phase && (phase.kind === "combo" || phase.kind === "tech" || phase.kind === "game") && (
         <motion.button
           onClick={() => setDrawerOpen(true)}
           aria-label={`Voir les détails — ${phase.name}`}
@@ -416,8 +457,8 @@ export default function RunPage() {
         </motion.button>
       )}
 
-      {/* ── Controls */}
-      <div style={{ padding: "12px 20px", paddingBottom: "max(20px, calc(env(safe-area-inset-bottom, 0px) + 16px))", flexShrink: 0 }}>
+      {/* ── Controls — masqués en mode focus */}
+      <div style={{ display: isFocusMode ? "none" : "block", padding: "12px 20px", paddingBottom: "max(20px, calc(env(safe-area-inset-bottom, 0px) + 16px))", flexShrink: 0 }}>
         <Controls
           isPlaying={isPlaying}
           timerState={timerState}
