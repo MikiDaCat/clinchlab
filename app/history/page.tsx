@@ -348,7 +348,7 @@ function SessionDetail({
         {/* Drag handle zone */}
         <div
           onPointerDown={e => dragControls.start(e)}
-          style={{ padding: "12px 20px 0", flexShrink: 0, cursor: "grab", touchAction: "none" }}
+          style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 50px)", paddingLeft: 20, paddingRight: 20, paddingBottom: 0, flexShrink: 0, cursor: "grab", touchAction: "none" }}
         >
           <div style={{ width: 36, height: 4, borderRadius: 2, background: "var(--rule-3)", margin: "0 auto 16px" }} />
           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 20 }}>
