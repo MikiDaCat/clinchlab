@@ -133,6 +133,7 @@ export default function TimerPage() {
   const [isPaused,      setIsPaused]      = useState(false)
   const [showCountdown, setShowCountdown] = useState(false)
   const [isFullscreen,  setIsFullscreen]  = useState(false)
+  const [isFocusMode,   setIsFocusMode]   = useState(false)
 
   const workDuration   = WORK_STEPS[workIdx]
   const restDuration   = REST_STEPS[restIdx]
@@ -215,12 +216,18 @@ export default function TimerPage() {
   }, [])
 
   const toggleFullscreen = useCallback(() => {
+    /* iOS fallback : sortir du mode focus si actif */
+    if (isFocusMode) { setIsFocusMode(false); return }
     type FSEl = HTMLElement & { webkitRequestFullscreen?(): Promise<void> }
     const el = document.documentElement as FSEl
-    if (!document.fullscreenElement) {
-      ;(el.requestFullscreen?.() ?? el.webkitRequestFullscreen?.())?.catch(() => {})
-    } else { document.exitFullscreen?.().catch(() => {}) }
-  }, [])
+    if (document.fullscreenElement) {
+      document.exitFullscreen?.().catch(() => {})
+    } else {
+      const p = el.requestFullscreen?.() ?? el.webkitRequestFullscreen?.()
+      if (p) p.catch(() => setIsFocusMode(true))   /* iOS : API échoue → focus mode JS */
+      else   setIsFocusMode(true)                  /* Pas d'API du tout → focus mode JS */
+    }
+  }, [isFocusMode])
 
   const handleStart = useCallback(() => {
     unlockAudio()
@@ -278,7 +285,7 @@ export default function TimerPage() {
 
       {/* ── Header adaptatif */}
       {isRunning ? (
-        <div style={{ flexShrink: 0 }}>
+        <div style={{ flexShrink: 0, display: isFocusMode ? "none" : "block" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "6px 16px 8px", minHeight: 52 }}>
             <div style={{ flex: 1, minWidth: 0 }}>
               {mode === "intervals" && phase !== "done" ? (
@@ -467,6 +474,13 @@ export default function TimerPage() {
                   style={{ position: "absolute", inset: 0, cursor: "pointer", zIndex: 1, touchAction: "manipulation" }}
                 />
               )}
+              {isFocusMode && (
+                <div
+                  onClick={() => setIsFocusMode(false)}
+                  aria-label="Quitter le mode focus"
+                  style={{ position: "absolute", inset: 0, cursor: "pointer", zIndex: 2 }}
+                />
+              )}
               <div style={{ position: "relative", zIndex: 2, pointerEvents: "none", width: "100%" }}>
                 <GiantTimer remaining={ringRemaining} state={timerState} />
               </div>
@@ -485,8 +499,8 @@ export default function TimerPage() {
         </AnimatePresence>
       </div>
 
-      {/* ── Controls (running only) */}
-      {isRunning && (
+      {/* ── Controls (running only, masqués en mode focus) */}
+      {isRunning && !isFocusMode && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
