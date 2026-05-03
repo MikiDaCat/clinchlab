@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from "next"
 import { Anton, Barlow_Condensed, Manrope } from "next/font/google"
 import "./globals.css"
-import PWAInit       from "@/components/PWAInit"
-import InstallPrompt from "@/components/InstallPrompt"
+import PWAInit          from "@/components/PWAInit"
+import InstallPrompt    from "@/components/InstallPrompt"
+import SafeAreaTopMask  from "@/components/SafeAreaTopMask"
 
 /* next/font — noms de variables uniques pour éviter toute collision */
 const antonFont = Anton({
@@ -59,6 +60,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       ].join(" ")}
     >
       <body>
+        <SafeAreaTopMask />
         <PWAInit />
         <div className="app-shell">{children}</div>
         <InstallPrompt />
